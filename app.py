@@ -177,4 +177,4 @@ def sign_up():
 def static_file(filename):
   bottle.send_file(filename, root='static/')
     
-bottle.run(host='localhost', port=8080,reloader=True)
+bottle.run(host=settings.RETWIS_HOST, port=settings.RETWIS_PORT,reloader=True)

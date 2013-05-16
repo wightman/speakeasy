@@ -11,7 +11,7 @@ import unittest
 import redis
 import settings
 #make sure it's different from 'production' settings since db will be flushed
-settings.r = redis.Redis(host='localhost', port=6379, db=9)
+settings.r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=9)
 from domain import User,Post
 
 class tests(unittest.TestCase):
