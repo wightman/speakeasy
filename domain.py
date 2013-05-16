@@ -80,13 +80,21 @@ class User(Model):
       return [Post(int(post_id)) for post_id in timeline]
     return []
 
+  def recent(self):
+    recent= r.smembers("posts:id")
+    if recent:
+      if len(recent) < 100:
+        return [Post(int(post_id)) for post_id in reversed(recent)]
+      else:
+        return [Post(int(recent[post_id])) for post_id in xrange(len(recent)-1,len(recent)-101,-1)]
+    return []
+
   def mentions(self,page=1):
     _from, _to = (page-1)*10, page*10
     mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
     if mentions:
       return [Post(int(post_id)) for post_id in mentions]
     return []
-
 
   def add_post(self,post):
     r.lpush("user:id:%s:posts" % self.id, post.id)
