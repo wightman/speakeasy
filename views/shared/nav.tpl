@@ -1,4 +1,4 @@
-<div id="header"><a href="/"><img src="/static/retwis.png"></a>
+<div id="header"><a href="/"><img src="/static/twizard.png"></a>
 	%if logged:
 	<div id="nav"><a href="/">Home</a> <a href="/logout">Sign out</a></div>
 	%else:
