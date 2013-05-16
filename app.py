@@ -57,6 +57,28 @@ def mentions(user):
   return bottle.template('mentions',mentions=user.mentions(),page='mentions',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
+@bottle.route('/recent')
+@authenticate
+def mentions(user):
+  counts = user.followees_count,user.followers_count,user.tweet_count
+  return bottle.template('recent',recent=user.recent(),page='recent',username=user.username,
+                                    counts=counts,posts=user.posts()[:1],logged=True)
+
+@bottle.route('/followers')
+@authenticate
+def followers(user):
+  counts = user.followees_count,user.followers_count,user.tweet_count
+  return bottle.template('followers',followers=user.followers,page='followers',username=user.username,
+                                    counts=counts,posts=user.posts()[:1],logged=True)
+  
+@bottle.route('/following')
+@authenticate
+def followers(user):
+  counts = user.followees_count,user.followers_count,user.tweet_count
+  return bottle.template('following',followers=user.followees,page='following',username=user.username,
+                                    counts=counts,posts=user.posts()[:1],logged=True)  
+
+
 @bottle.route('/:name')
 def user_page(name):
   is_following,is_logged = False,user_is_logged()
