@@ -84,7 +84,7 @@ class User(Model):
     recent= r.smembers("posts:id")
     if recent:
       if len(recent) < 100:
-        return [Post(int(post_id)) for post_id in xrange(len(recent)-1,len(recent),-1)]
+        return [Post(int(post_id)) for post_id in xrange(len(recent)-1,0,-1)]
       else:
         return [Post(int(recent[post_id])) for post_id in xrange(len(recent)-1,len(recent)-101,-1)]
     return []
