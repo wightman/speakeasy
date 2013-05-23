@@ -81,12 +81,12 @@ class User(Model):
     return []
 
   def recent(self):
-    recent= r.smembers("posts:id")
-    if recent:
-      if len(recent) < 100:
-        return [Post(int(post_id)) for post_id in xrange(len(recent)-1,0,-1)]
-      else:
-        return [Post(int(recent[post_id])) for post_id in xrange(len(recent)-1,len(recent)-101,-1)]
+    mostrecentpid = int(r.get("post:uid"))
+    
+    if mostrecentpid < 100:
+      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
+    else:
+      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
     return []
 
   def mentions(self,page=1):
