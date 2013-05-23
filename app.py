@@ -115,8 +115,6 @@ def post(user):
     pass
   finally:
     bottle.redirect('/home')
-    
-  
 
 @bottle.route('/follow/:name',method='POST')
 @authenticate

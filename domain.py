@@ -176,6 +176,11 @@ class Post(Model):
       if u:
         u.add_mention(post)
 
+    hashtags = re.findall('#\w+', content)
+    for hashtag in hashtags:
+      Hashtag.addToTag(hashtag[1:], post_id)
+      
+
   @staticmethod
   def find_by_id(id):
     if r.sismember('posts:id', int(id)):
@@ -185,6 +190,16 @@ class Post(Model):
   @property
   def user(self):
     return User.find_by_id(r.get("post:id:%s:user_id" % self.id))
+
+class Hashtag:
+  @staticmethod
+  def keyExists(tag):
+    return r.exists('hashtags:%s' % tag)
+  
+  @staticmethod
+  def addToTag(tag, post_id):
+    r.rpush('hashtags:%s' % tag, post_id)
+
 
   
 def main():
