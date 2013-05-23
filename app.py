@@ -108,9 +108,15 @@ def status(name,id):
 @bottle.route('/post',method='POST')
 @authenticate
 def post(user):
-  content = bottle.request.POST['content']
-  Post.create(user, content)
-  bottle.redirect('/home')
+  try:
+    content = bottle.request.POST['content']
+    Post.create(user, content)
+  except KeyError, e:
+    pass
+  finally:
+    bottle.redirect('/home')
+    
+  
 
 @bottle.route('/follow/:name',method='POST')
 @authenticate
