@@ -1,2 +1,8 @@
 *.pyc
 *~
+
+<<<<<<< HEAD
+*.py
+=======
+settings.py
+>>>>>>> local
