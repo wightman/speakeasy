@@ -178,8 +178,11 @@ class Post(Model):
 
     hashtags = re.findall('#\w+', content)
     for hashtag in hashtags:
-      Hashtag.addToTag(hashtag[1:], post_id)
-      
+      if Hashtag.keyIsMember(hashtag[1:]):
+        Hashtag.addToTag(hashtag[1:], post_id)
+      else:
+        Hashtag.addNewTag(hashtag[1:])
+        Hashtag.addToTag(hashtag[1:], post_id)
 
   @staticmethod
   def find_by_id(id):
@@ -192,14 +195,23 @@ class Post(Model):
     return User.find_by_id(r.get("post:id:%s:user_id" % self.id))
 
 class Hashtag:
+
+  def page(self,page,tag):
+    _from = (page-1)*10
+    _to = (page)*10
+    return [Post(post_id) for post_ids in r.list_range('hashtags:%s' % tag,_from,_to)]
+
   @staticmethod
-  def keyExists(tag):
-    return r.exists('hashtags:%s' % tag)
+  def keyIsMember(tag):
+    return r.sismember('hashtags', tag)
   
   @staticmethod
   def addToTag(tag, post_id):
     r.rpush('hashtags:%s' % tag, post_id)
 
+  @staticmethod
+  def addNewTag(tag):
+    r.sadd('hashtags', tag)
 
   
 def main():
