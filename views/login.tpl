@@ -18,6 +18,12 @@
 	%end
 <p><label for="signup-name">username:</label><input type="text" name="name" id="signup-username"/></p>
 <p><label for="signup-password">password:</label><input type="password" name="password" id="signup-password"/></p>
+<br/>
+<br/>
+<h2>Tell us a little bit about yourself:</h2>
+<p><label for="signup-firstName">first name:</label><input type="text" name="firstName" id="signup-firstName"/></p>
+<p><label for="signup-lastName">last name:</label><input type="text" name="lastName" id="signup-lastName"/></p>
+<p><label for="signup-greeting">Personal Greeting:</label><input type="textarea" name="greeting" id="signup-greeting"/></p>
 <p><input type="submit" value="signup!" /></p>
 </form>
 %include shared/footer.tpl

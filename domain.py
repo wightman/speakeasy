@@ -53,7 +53,7 @@ class User(Model):
       return None
 
   @staticmethod
-  def create(username, password):
+  def create(username, password, attributes):
     user_id = r.incr("user:uid")
     if not r.get("user:username:%s" % username):
       r.set("user:id:%s:username" % user_id, username)
@@ -63,8 +63,23 @@ class User(Model):
       salt = settings.SALT
       r.set("user:id:%s:password" % user_id, salt+password)
       r.lpush("users", user_id)
-      return User(user_id)
+
+      user = User(user_id)
+
+      if user:
+        user.updateAttributes(attributes)
+	return user
+
     return None
+
+  def updateAttributes(self,attributes):
+	for k,v in attributes.iteritems():
+		if k == "password":
+			salt = settings.SALT
+			v = salt + v
+
+		self.__setattr__(k,v)
+      		r.set("user:id:%s:%s" % (self.id, k) , v)
 
   def posts(self,page=1):
     _from, _to = (page-1)*10, page*10

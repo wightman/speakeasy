@@ -108,7 +108,7 @@ def user_page(name):
     if logged_user:
       is_following = logged_user.following(user)
       
-    return bottle.template('user',posts=user.posts(),counts=counts,page='user',
+    return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='user',
                                   username=user.username,logged=is_logged,is_following=is_following,himself=himself)
   else:
     return bottle.HTTPError(code=404)
@@ -151,6 +151,35 @@ def post(user,name):
     user.stop_following(user_to_unfollow)
   bottle.redirect('/%s' % name)
 
+@bottle.route('/edit/:name', method='GET')
+@authenticate
+def get(user, name):
+  bottle.TEMPLATES.clear()
+  return bottle.template('editProfile',page='editProfile',logged=True,user=user)
+
+@bottle.route('/edit', method="POST")
+@authenticate
+def edit(user):
+	
+	attributes = {}
+	if 'firstName' in bottle.request.POST:
+		attributes['firstName'] = bottle.request.POST['firstName']
+ 
+	if 'lastName' in bottle.request.POST:
+		attributes['lastName'] = bottle.request.POST['lastName']
+
+	if 'greeting' in bottle.request.POST:
+		attributes['greeting'] = bottle.request.POST['greeting']
+
+	# For now, lets leave password out, we may want a seperate screen to update password
+	# this gets confusing when salting password.
+
+	#if 'password' in bottle.request.POST:
+	#	attributes['password'] = bottle.request.POST['password']
+
+	user.updateAttributes(attributes)
+
+	bottle.redirect('/home')
 
 @bottle.route('/signup')
 @bottle.route('/login')
@@ -188,7 +217,28 @@ def sign_up():
     name = bottle.request.POST['name']
     if name not in reserved_usernames.split():
       password = bottle.request.POST['password']
-      user = User.create(name,password)
+	
+      # Redis does not seem to like empty string ("") values,
+      # They save fine, but cause errors when retrieving
+      # Qucik-fix: Defaults
+      attributes = {}
+      if 'firstName' in bottle.request.POST:
+	attributes['firstName'] = bottle.request.POST['firstName']
+      else:
+	attributes['firstName'] = "Unknown" 
+	
+ 
+      if 'lastName' in bottle.request.POST:
+	attributes['lastName'] = bottle.request.POST['lastName']
+      else:
+	attributes['lastName'] = "Unknown" 
+
+      if 'greeting' in bottle.request.POST:
+	attributes['greeting'] = bottle.request.POST['greeting']
+      else:
+	attributes['greeting'] = "I'm still new on Twizzard" 
+
+      user = User.create(name,password, attributes)
       if user:
         sess=Session(bottle.request,bottle.response)
         sess['id'] = user.id
