@@ -137,8 +137,6 @@ class User(Model):
       return [User(int(user_id)) for user_id in followees]
     return []
   
-  
-  #added
   @property
   def tweet_count(self):
     return r.llen("user:id:%s:posts" % self.id) or 0
@@ -196,10 +194,11 @@ class Post(Model):
 
 class Hashtag:
 
-  def page(self,page,tag):
+  @staticmethod
+  def page(tag,page):
     _from = (page-1)*10
     _to = (page)*10
-    return [Post(post_id) for post_ids in r.list_range('hashtags:%s' % tag,_from,_to)]
+    return [Post(post_id) for post_id in r.lrange('hashtags:%s' % tag,_from,_to)]
 
   @staticmethod
   def keyIsMember(tag):
@@ -213,6 +212,23 @@ class Hashtag:
   def addNewTag(tag):
     r.sadd('hashtags', tag)
 
+class Functions:
+
+  @staticmethod
+  def getUsers():
+    lastid = int(r.get('user:uid'))
+    usernames = []
+    for i in xrange(1,lastid+1):
+      u = r.get("user:id:%s:username" % str(i))
+      if u == None:
+        pass
+      else:
+        usernames.append(u)
+    usernames.sort()
+    userList = []
+    for u in usernames:
+      userList.append(User.find_by_username(u))
+    return userList
   
 def main():
   pass

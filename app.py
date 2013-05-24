@@ -7,7 +7,7 @@ import settings
 settings.r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 from bottle_session import Session
-from domain import User,Post,Timeline
+from domain import Hashtag,User,Post,Timeline,Functions
 
 reserved_usernames = 'follow mentions home signup login logout post'
 
@@ -64,6 +64,13 @@ def mentions(user):
   return bottle.template('recent',recent=user.recent(),page='recent',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
+@bottle.route('/hashtag/:ht')
+@authenticate
+def hashtags(user, ht):
+  counts = user.followees_count,user.followers_count,user.tweet_count
+  return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',username=user.username,
+                                    counts=counts,posts=user.posts()[:1],logged=True)
+
 @bottle.route('/followers')
 @authenticate
 def followers(user):
@@ -78,6 +85,17 @@ def followers(user):
   return bottle.template('following',followers=user.followees,page='following',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)  
 
+@bottle.route('/users')
+@authenticate
+def users(user):
+  counts = user.followees_count,user.followers_count,user.tweet_count
+  return bottle.template('users',users=Functions.getUsers(),page='users',username=user.username,
+                                    counts=counts,posts=user.posts()[:1],logged=True)
+
+@bottle.route('/test')
+@authenticate
+def test(user):
+  Functions.getUsers()
 
 @bottle.route('/:name')
 def user_page(name):
@@ -104,6 +122,7 @@ def status(name,id):
       return bottle.template('single',username=post.user.username,tweet=post,page='single',
                                     logged=user_is_logged())
   return bottle.HTTPError(code=404,message='tweet not found')
+
 
 @bottle.route('/post',method='POST')
 @authenticate
