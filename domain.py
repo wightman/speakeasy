@@ -76,6 +76,9 @@ class User(Model):
   def timeline(self,page=1):
     _from, _to = (page-1)*10, page*10
     timeline= r.lrange("user:id:%s:timeline" % self.id, _from, _to)
+    mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
+    if mentions and timeline:
+      timeline.extend(mentions)
     if timeline:
       return [Post(int(post_id)) for post_id in timeline]
     return []
