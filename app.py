@@ -179,7 +179,7 @@ def edit(user):
 
 	user.updateAttributes(attributes)
 
-	bottle.redirect('/home')
+	bottle.redirect('/' + user.username)
 
 @bottle.route('/signup')
 @bottle.route('/login')
@@ -218,25 +218,15 @@ def sign_up():
     if name not in reserved_usernames.split():
       password = bottle.request.POST['password']
 	
-      # Redis does not seem to like empty string ("") values,
-      # They save fine, but cause errors when retrieving
-      # Qucik-fix: Defaults
       attributes = {}
       if 'firstName' in bottle.request.POST:
 	attributes['firstName'] = bottle.request.POST['firstName']
-      else:
-	attributes['firstName'] = "Unknown" 
 	
- 
       if 'lastName' in bottle.request.POST:
 	attributes['lastName'] = bottle.request.POST['lastName']
-      else:
-	attributes['lastName'] = "Unknown" 
 
       if 'greeting' in bottle.request.POST:
 	attributes['greeting'] = bottle.request.POST['greeting']
-      else:
-	attributes['greeting'] = "I'm still new on Twizzard" 
 
       user = User.create(name,password, attributes)
       if user:

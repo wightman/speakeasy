@@ -167,6 +167,22 @@ class User(Model):
   def followers_count(self):
     return r.scard("user:id:%s:followers" % self.id) or 0
 
+  @property
+  def firstName(self):
+	return r.get("user:id:%s:firstName" % self.id) or ""
+
+  @property
+  def firstName(self):
+	return r.get("user:id:%s:firstName" % self.id) or ""
+
+  @property
+  def lastName(self):
+	return r.get("user:id:%s:lastName" % self.id) or ""
+
+  @property
+  def greeting(self):
+	return r.get("user:id:%s:greeting" % self.id) or ""
+
   def add_follower(self,user):
     r.sadd("user:id:%s:followers" % self.id, user.id)
 
