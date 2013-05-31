@@ -10,6 +10,7 @@ from bottle_session import Session
 from domain import Hashtag,User,Post,Timeline,Functions
 
 reserved_usernames = 'follow mentions home signup login logout post'
+bottle.debug(true)
 
 def authenticate(handler):
   def _check_auth(*args,**kwargs):
