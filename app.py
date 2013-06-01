@@ -93,12 +93,8 @@ def users(user):
   return bottle.template('users',users=Functions.getUsers(),page='users',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
-@bottle.route('/test')
-@authenticate
-def test(user):
-  Functions.getUsers()
-
 @bottle.route('/:name')
+@authenticate
 def user_page(name):
   is_following,is_logged = False,user_is_logged()
   user = User.find_by_username(name)
