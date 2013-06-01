@@ -95,7 +95,7 @@ def users(user):
 
 @bottle.route('/:name')
 @authenticate
-def user_page(name):
+def user_page(auth, name):
   is_following,is_logged = False,user_is_logged()
   user = User.find_by_username(name)
   if user:
