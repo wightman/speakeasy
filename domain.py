@@ -118,7 +118,7 @@ class User(Model):
     r.lpush("user:id:%s:posts" % self.id, post.id)
     r.lpush("user:id:%s:timeline" % self.id, post.id)
     r.sadd('posts:id', post.id)
-
+  
   def add_timeline_post(self,post):
     r.lpush("user:id:%s:timeline" % self.id, post.id)
   
@@ -263,6 +263,18 @@ class Functions:
     for u in usernames:
       userList.append(User.find_by_username(u))
     return userList
+
+  @staticmethod
+  def recent():
+    mostrecentpid = int(r.get("post:uid"))
+    
+    if mostrecentpid < 100:
+      post = Post(int(mostrecentpid))
+      print post.user.username
+      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
+    else:
+      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
+    return []
   
 def main():
   pass
