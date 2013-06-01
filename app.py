@@ -62,7 +62,7 @@ def mentions(user):
 @authenticate
 def mentions(user):
   counts = user.followees_count,user.followers_count,user.tweet_count
-  return bottle.template('recent',recent=user.recent(),page='recent',username=user.username,
+  return bottle.template('recent',recent=Functions.recent(),page='recent',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
 @bottle.route('/hashtag/:ht')

@@ -98,15 +98,6 @@ class User(Model):
       return [Post(int(post_id)) for post_id in timeline]
     return []
 
-  def recent(self):
-    mostrecentpid = int(r.get("post:uid"))
-    
-    if mostrecentpid < 100:
-      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
-    else:
-      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
-    return []
-
   def mentions(self,page=1):
     _from, _to = (page-1)*10, page*10
     mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
