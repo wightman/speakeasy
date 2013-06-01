@@ -37,7 +37,7 @@ def user_is_logged():
 def index():
   if user_is_logged():
     bottle.redirect('/home')
-  return bottle.template('home_not_logged',logged=False)
+  return bottle.template('home_not_logged', recent=Functions.recent(), logged=False)
 
 @bottle.route('/home')
 @authenticate

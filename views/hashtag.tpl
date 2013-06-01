@@ -8,7 +8,7 @@
 	
 	<div class="tweets">
 	%for post in hashtags:
-<p><img src="/static/avatar.png" /> <strong><a href="/{{post.user.username}}">{{post.user.username}}</a></strong> {{post.content}}<span><a href="/{{username}}/statuses/{{post.id}}">permalink</a></span></p>
+<p><img src="/static/avatar.png" /> <strong><a href="/{{post.user.username}}">{{post.user.username}}</a></strong> {{post.content}}<span><a href="/{{post.user.username}}/statuses/{{post.id}}">permalink</a></span></p>
 	%end
 	</div>
 </div>
