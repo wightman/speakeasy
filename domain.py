@@ -257,15 +257,18 @@ class Functions:
 
   @staticmethod
   def recent():
-    mostrecentpid = int(r.get("post:uid"))
     
-    if mostrecentpid < 100:
-      post = Post(int(mostrecentpid))
-      print post.user.username
-      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
-    else:
-      return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
-    return []
+      if r.get("post:uid") == None:
+        return []
+      else:
+        mostrecentpid = int(r.get("post:uid"))
+        if mostrecentpid < 100:
+          post = Post(int(mostrecentpid))
+          print post.user.username
+          return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
+        else:
+          return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
+        return []
   
 def main():
   pass
