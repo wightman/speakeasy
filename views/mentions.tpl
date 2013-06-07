@@ -5,7 +5,9 @@
 	<form method="POST" action="/post" class="update">
 		<textarea name="content"></textarea>
 		<fieldset>
-		<p>{{posts[0].content}}</p>
+		%if posts:
+			<p>{{posts[0].content}}</p>
+		%end
 		<input type="submit" value="update!" />
 		</fieldset>
 	</form>
