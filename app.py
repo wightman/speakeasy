@@ -9,7 +9,7 @@ settings.r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=
 from bottle_session import Session
 from domain import Hashtag,User,Post,Timeline,Functions
 
-reserved_usernames = 'follow mentions home signup login logout post'
+reserved_usernames = 'follow mentions home signup login logout post guest'
 bottle.debug(True)
 
 def authenticate(handler):
@@ -21,6 +21,19 @@ def authenticate(handler):
         return handler(user,*args,**kwargs)
     bottle.redirect('/login')
   return _check_auth
+
+#this is used when we need to distinguish between a user and a guest, 
+#as opposed to authentication which will lock guests out.
+def userCheck(handler):
+  def _check_auth(*args,**kwargs):
+    sess = Session(bottle.request,bottle.response)
+    if not sess.is_new():
+      user =  User.find_by_id(sess['id'])
+      if user:
+        return handler(user,*args,**kwargs)
+    return handler(None,*args,**kwargs)
+  return _check_auth
+
 
 def logged_in_user():
   sess = Session(bottle.request,bottle.response)
@@ -66,11 +79,15 @@ def mentions(user):
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
 @bottle.route('/hashtag/:ht')
-@authenticate
+@userCheck
 def hashtags(user, ht):
-  counts = user.followees_count,user.followers_count,user.tweet_count
-  return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',username=user.username,
-                                    counts=counts,posts=user.posts()[:1],logged=True)
+  if user != None:
+    counts = user.followees_count,user.followers_count,user.tweet_count
+    return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',username=user.username,
+                                      counts=counts,posts=user.posts()[:1],logged=True)
+  else:
+    return bottle.template('guest/hashtag', title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',
+                                      logged=False)  
 
 @bottle.route('/followers')
 @authenticate
@@ -87,28 +104,40 @@ def followers(user):
                                     counts=counts,posts=user.posts()[:1],logged=True)  
 
 @bottle.route('/users')
-@authenticate
+@userCheck
 def users(user):
-  counts = user.followees_count,user.followers_count,user.tweet_count
-  return bottle.template('users',users=Functions.getUsers(),page='users',username=user.username,
-                                    counts=counts,posts=user.posts()[:1],logged=True)
+  if user != None:
+    counts = user.followees_count,user.followers_count,user.tweet_count
+    return bottle.template('users',users=Functions.getUsers(),page='users',username=user.username,
+                                      counts=counts,posts=user.posts()[:1],logged=True)
+  else:
+    return bottle.template('guest/users',users=Functions.getUsers(), page='users',logged=False)
 
 @bottle.route('/:name')
-@authenticate
+@userCheck
 def user_page(auth, name):
-  is_following,is_logged = False,user_is_logged()
-  user = User.find_by_username(name)
-  if user:
-    counts = user.followees_count,user.followers_count,user.tweet_count
-    logged_user = logged_in_user()
-    himself = logged_user.username == name
-    if logged_user:
-      is_following = logged_user.following(user)
-      
-    return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='user',
-                                  username=user.username,logged=is_logged,is_following=is_following,himself=himself)
+  if auth != None:
+    is_following,is_logged = False,user_is_logged()
+    user = User.find_by_username(name)
+    if user:
+      counts = user.followees_count,user.followers_count,user.tweet_count
+      logged_user = logged_in_user()
+      himself = logged_user.username == name
+      if logged_user:
+        is_following = logged_user.following(user)
+        
+      return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='user',
+                                    username=user.username,logged=is_logged,is_following=is_following,himself=himself)
+    else:
+      return bottle.HTTPError(code=404)
   else:
-    return bottle.HTTPError(code=404)
+    user = User.find_by_username(name)
+    if user:
+      counts = user.followees_count,user.followers_count,user.tweet_count
+      return bottle.template('guest/user',user=user,posts=user.posts(),counts=counts,page='user', 
+                                username=user.username, logged=False)
+    else:
+      return bottle.HTTPError(code=404)
 
 @bottle.route('/:name/statuses/:id')
 @bottle.validate(id=int)
@@ -139,7 +168,7 @@ def post(user,name):
   if user_to_follow:
     user.follow(user_to_follow)
   bottle.redirect('/%s' % name)
-
+[]
 @bottle.route('/unfollow/:name',method='POST')
 @authenticate
 def post(user,name):
