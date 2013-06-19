@@ -11,7 +11,8 @@
 
   var regexp = {
     url :/((https?\:\/\/)|(www\.))(\S+)(\w{2,4})(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/gi,
-    twitterUsername : /(@)(\w+)/g
+    twitterUsername : /(@)(\w+)/g,
+    twitterHashTag : /(#)(\w+)/g
   }
   
   var enhance = function()
@@ -53,6 +54,11 @@
             function(username){
               short_username = username.substring(1,username.length)
               return "<a href='/"+ short_username +"'>"+ username+"</a>";
+        });
+        text = text.replace(regexp.twitterHashTag,
+            function(hashtag){
+              short_hashtag = hashtag.substring(1,hashtag.length)
+              return "<a href='/hashtag/"+ short_hashtag +"'>"+ hashtag +"</a>";
         });
         return text;
       }
