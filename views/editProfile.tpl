@@ -1,5 +1,5 @@
 %#login page
-%include shared/header.tpl header=page,logged=logged
+%include shared/header.tpl header=page,logged=logged,username=user.username
 
 <form method="POST" action="/edit" id="edit">
 	<br/>

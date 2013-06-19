@@ -102,6 +102,7 @@ class User(Model):
     _from, _to = (page-1)*10, page*10
     mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
     if mentions:
+      print "hi"
       return [Post(int(post_id)) for post_id in mentions]
     return []
 

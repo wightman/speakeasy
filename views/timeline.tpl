@@ -1,5 +1,6 @@
 %#list of currents posts
-%include shared/header.tpl header=page,logged=logged
+%active='home'
+%include shared/header.tpl header=page,logged=logged,active=active,username=username
 <div id="main">
 %include shared/form.tpl tweet=last_tweet
 	

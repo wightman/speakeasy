@@ -50,7 +50,7 @@ def user_is_logged():
 def index():
   if user_is_logged():
     bottle.redirect('/home')
-  return bottle.template('home_not_logged', recent=Functions.recent(), logged=False)
+  return bottle.template('home_not_logged',recent=Functions.recent(), logged=False)
 
 @bottle.route('/home')
 @authenticate
@@ -75,7 +75,7 @@ def mentions(user):
 @authenticate
 def mentions(user):
   counts = user.followees_count,user.followers_count,user.tweet_count
-  return bottle.template('recent',recent=Functions.recent(),page='recent',username=user.username,
+  return bottle.template('recent',recent=Functions.recent(),page='timeline',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
 @bottle.route('/hashtag/:ht')
@@ -83,10 +83,10 @@ def mentions(user):
 def hashtags(user, ht):
   if user != None:
     counts = user.followees_count,user.followers_count,user.tweet_count
-    return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',username=user.username,
+    return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='timeline',username=user.username,
                                       counts=counts,posts=user.posts()[:1],logged=True)
   else:
-    return bottle.template('guest/hashtag', title=ht, hashtags=Hashtag.page(ht, page=1),page='hashtag',
+    return bottle.template('guest/hashtag', title=ht, hashtags=Hashtag.page(ht, page=1),page='timeline',
                                       logged=False)  
 
 @bottle.route('/followers')
@@ -108,10 +108,10 @@ def followers(user):
 def users(user):
   if user != None:
     counts = user.followees_count,user.followers_count,user.tweet_count
-    return bottle.template('users',users=Functions.getUsers(),page='users',username=user.username,
+    return bottle.template('users',users=Functions.getUsers(),page='timeline',username=user.username,
                                       counts=counts,posts=user.posts()[:1],logged=True)
   else:
-    return bottle.template('guest/users',users=Functions.getUsers(), page='users',logged=False)
+    return bottle.template('guest/users',users=Functions.getUsers(), page='timeline',logged=False)
 
 @bottle.route('/:name')
 @userCheck
@@ -126,15 +126,15 @@ def user_page(auth, name):
       if logged_user:
         is_following = logged_user.following(user)
         
-      return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='user',
-                                    username=user.username,logged=is_logged,is_following=is_following,himself=himself)
+      return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='timeline',
+                                    username=user.username,logged=is_logged,is_following=is_following,himself=himself,viewer=auth.username)
     else:
       return bottle.HTTPError(code=404)
   else:
     user = User.find_by_username(name)
     if user:
       counts = user.followees_count,user.followers_count,user.tweet_count
-      return bottle.template('guest/user',user=user,posts=user.posts(),counts=counts,page='user', 
+      return bottle.template('guest/user',user=user,posts=user.posts(),counts=counts,page='timeline', 
                                 username=user.username, logged=False)
     else:
       return bottle.HTTPError(code=404)
@@ -181,7 +181,7 @@ def post(user,name):
 @authenticate
 def get(user, name):
   bottle.TEMPLATES.clear()
-  return bottle.template('editProfile',page='editProfile',logged=True,user=user)
+  return bottle.template('editProfile',page='timeline',logged=True,user=user)
 
 @bottle.route('/edit', method="POST")
 @authenticate

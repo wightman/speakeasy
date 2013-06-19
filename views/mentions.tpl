@@ -1,5 +1,6 @@
 %#list of currents posts
-%include shared/header.tpl header=page,logged=logged
+%active='mentions'
+%include shared/header.tpl header=page,logged=logged,active=active,username=username
 <div id="main">
 	<h1>What's happening?</h1>
 	<form method="POST" action="/post" class="update">

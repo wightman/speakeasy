@@ -1,6 +1,12 @@
 %#list of currents posts
-%include shared/header.tpl header=page,logged=logged
+%if himself:
+	%active='profile'
+	%include shared/header.tpl header=page,logged=logged,username=username,active=active
+%else:
+	%include shared/header.tpl header=page,logged=logged,username=viewer
+	%end
 <div id="main">
+	%#NEEDS TO BE FIXED SO IT DIRECTS TO PROFILE
 	%include shared/profile.tpl user=user, logged=logged, himself=himself
 
 	%if logged and not himself:

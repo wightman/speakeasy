@@ -1,5 +1,6 @@
 %#list of currents posts
-%include shared/header.tpl header=page,logged=logged
+%active='users'
+%include shared/header.tpl header=page,logged=logged,active=active
 <div id="main">
 	<h1>Users</h1>
 	
