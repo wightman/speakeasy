@@ -224,19 +224,19 @@ class Hashtag:
   def page(tag,page):
     _from = (page-1)*10
     _to = (page)*10
-    return [Post(post_id) for post_id in r.lrange('hashtags:%s' % tag,_from,_to)]
+    return [Post(post_id) for post_id in r.lrange('hashtags:%s' % tag.lower(),_from,_to)]
 
   @staticmethod
   def keyIsMember(tag):
-    return r.sismember('hashtags', tag)
+    return r.sismember('hashtags', tag.lower())
   
   @staticmethod
   def addToTag(tag, post_id):
-    r.rpush('hashtags:%s' % tag, post_id)
+    r.rpush('hashtags:%s' % tag.lower(), post_id)
 
   @staticmethod
   def addNewTag(tag):
-    r.sadd('hashtags', tag)
+    r.sadd('hashtags', tag.lower())
 
 class Functions:
 
