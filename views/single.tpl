@@ -1,5 +1,5 @@
 %#single post template
-%include shared/header.tpl header=page,logged=logged
+%include shared/header.tpl header=page,logged=logged,username=viewer
 <div class="tweets">
 	<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{tweet.user.username}}/statuses/{{tweet.id}}">permalink</a></span></p>
 </div>

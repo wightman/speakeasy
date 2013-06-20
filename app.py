@@ -116,38 +116,36 @@ def users(user):
 @bottle.route('/:name')
 @userCheck
 def user_page(auth, name):
-  if auth != None:
-    is_following,is_logged = False,user_is_logged()
-    user = User.find_by_username(name)
-    if user:
-      counts = user.followees_count,user.followers_count,user.tweet_count
+  user = User.find_by_username(name)
+  if user:
+    counts = user.followees_count,user.followers_count,user.tweet_count
+    if auth != None:
+      is_following,is_logged = False,user_is_logged()
       logged_user = logged_in_user()
       himself = logged_user.username == name
       if logged_user:
         is_following = logged_user.following(user)
-        
       return bottle.template('user',user=user,posts=user.posts(),counts=counts,page='timeline',
-                                    username=user.username,logged=is_logged,is_following=is_following,himself=himself,viewer=auth.username)
+                                  username=user.username,logged=is_logged,is_following=is_following,himself=himself,viewer=auth.username)
     else:
-      return bottle.HTTPError(code=404)
-  else:
-    user = User.find_by_username(name)
-    if user:
-      counts = user.followees_count,user.followers_count,user.tweet_count
       return bottle.template('guest/user',user=user,posts=user.posts(),counts=counts,page='timeline', 
                                 username=user.username, logged=False)
-    else:
-      return bottle.HTTPError(code=404)
+  return bottle.HTTPError(code=404,message='tweet not found')  
 
 @bottle.route('/:name/statuses/:id')
 @bottle.validate(id=int)
-def status(name,id):
+@userCheck
+def status(auth, name,id):
   post = Post.find_by_id(id)
   if post:
     if post.user.username == name:
-      return bottle.template('single',username=post.user.username,tweet=post,page='single',
-                                    logged=user_is_logged())
-  return bottle.HTTPError(code=404,message='tweet not found')
+      if auth != None:
+        return bottle.template('single',username=post.user.username,tweet=post,page='single',
+                                      logged=user_is_logged(),viewer=auth.username)
+      else:
+        return bottle.template('single',username=post.user.username,tweet=post,page='single',
+                                      logged=user_is_logged(),viewer="")
+  return bottle.HTTPError(code=404,message='tweet not found')  
 
 
 @bottle.route('/post',method='POST')

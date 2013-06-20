@@ -1,7 +1,7 @@
 
 %#WORK IN PROGRESS!
 %#list of currents posts
-%include shared/header.tpl header=page,logged=logged
+%include shared/header.tpl header=page,logged=logged,username=username
 <div id="main">
 	<h1>#{{title}}</h1>
 	<p/>
