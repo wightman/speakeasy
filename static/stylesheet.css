@@ -1,0 +1,16 @@
+.tweets p{border-bottom:1px solid #eee;overflow:hidden;margin:0 0 10px 0;font-size:1.0em;color:#151515;}
+.tweets p img{float:left;width:48px;height:48px;margin:0 5px 5px 0;}
+.tweets p strong a{color: #16387C;text-decoration:none;}
+.tweets p span{display:block;color:#d4d4d4;font-size:0.8em;}
+.tweets p span a {color:#d4d4d4;text-decoration:none;}
+.timeline form{width:100%;}
+textarea{width:98%;height:40px;border:1px solid #eee;}
+body{
+	background:url('/static/bg-clouds.png') top left repeat-x rgb(192,222,237);
+	max-width: 860px;
+}
+
+
+#sidebar-collapsed {
+	max-width: 252px;
+}

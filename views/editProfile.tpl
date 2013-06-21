@@ -1,6 +1,10 @@
 %#login page
 %include shared/header.tpl header=page,logged=logged,username=user.username
 
+<div class="container-fluid">
+
+	<div class="hero-unit tweets span9">
+
 <form method="POST" action="/edit" id="edit">
 	<br/>
 	<h2>Tell us more about yourself:</h2>
@@ -10,5 +14,8 @@
 <!--  <p><label for="edit-password">password:</label><input type="password" name="password" id="edit-password" value="{{user.password}}"/></p> -->
 <p><input type="submit" value="Save" /></p>
 </form>
+
+</div>
+</div>
 
 %include shared/footer.tpl

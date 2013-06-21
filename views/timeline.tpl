@@ -1,15 +1,27 @@
 %#list of currents posts
 %active='home'
 %include shared/header.tpl header=page,logged=logged,active=active,username=username
-<div id="main">
-%include shared/form.tpl tweet=last_tweet
+<div class="container-fluid">
 	
-	<div class="tweets">
-	%for tweet in timeline:
-		<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{tweet.user.username}}/statuses/{{tweet.id}}">permalink</a></span></p>
-	%end
+	<div class="visible-phone">
+		%include shared/side.tpl username=username,counts=counts
+	</div>
+
+	<div class="row-fluid">
+
+		<div class="tweets hero-unit span9">
+			%include shared/form.tpl tweet=last_tweet
+			%for tweet in timeline:
+				<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{tweet.user.username}}/statuses/{{tweet.id}}">permalink</a></span></p>
+			%end
+		</div>
+
+	<div class="span3 hidden-phone"> 
+	%include shared/side.tpl username=username,counts=counts
+	</div>
 	</div>
 </div>
-%include shared/side.tpl username=username,counts=counts
+
+
 	
 %include shared/footer.tpl

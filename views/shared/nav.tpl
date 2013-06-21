@@ -1,6 +1,6 @@
-<div class="navbar visible-phone">
+<div class="navbar navbar-fixed-top visible-phone">
     <div class="navbar-inner">
-        <ul class="nav">
+        <ul class="row-fluid nav">
          	<li>
 			 	<form class="navbar-search">
 				  <input type="text" class="search-query" placeholder="Search">
@@ -12,7 +12,7 @@
 			<li><a href="/login">Sign in</a></li>
 			%end 
 		</ul>
-        <ul class="row-fluid nav">
+        <ul class="row nav">
         	%if logged:
        			<li><a class="brand" href="/recent">Speakeasy</a></li>
        		%else:
@@ -39,6 +39,8 @@
         </ul>
     </div>
  </div>
+
+ 
  <div class="navbar hidden-phone">
      <div class="navbar-inner">
         <ul class="nav pull-left">

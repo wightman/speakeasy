@@ -6,7 +6,8 @@
 		<title>Speakeasy</title>
 		<link href="/static/bootstrap.min.css" rel="stylesheet" media="screen">
     	<link href="/static/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
-		<link rel="stylesheet" href="/static/retwis-py.css" type="text/css" media="screen" />
+		<!-- <link rel="stylesheet" href="/static/retwis-py.css" type="text/css" media="screen" /> -->
+		<link rel="stylesheet" href="/static/stylesheet.css" type="text/css" media="screen" />
 	</head>
 	<body class="{{header}}">
 		%if 'active' not in locals():
@@ -16,4 +17,4 @@
 			%username=''
 		%end
 		%include shared/nav.tpl logged=logged, active=active, username=username
-		<div id="container">
+
