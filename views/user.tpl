@@ -5,6 +5,11 @@
 %else:
 	%include shared/header.tpl header=page,logged=logged,username=viewer
 	%end
+
+<div class="visible-phone">
+		%include shared/side.tpl username=username,counts=counts
+</div>
+
 <div class="container-fluid">
 
 	<div class="row-fluid">
@@ -27,7 +32,11 @@
 
 	%if posts:
   	%for tweet in posts:
-  		<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{username}}/statuses/{{tweet.id}}">permalink</a></span></p>
+  		<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{username}}/statuses/{{tweet.id}}">permalink</a>
+  		%if tweet.user.username == username:
+			<a href="/{{username}}/delete/{{tweet.id}}">delete</a>
+		%end
+  		</span></p>
   	%end
    %else:
    <p>{{username}} hasn't posted any tweet yet</p>

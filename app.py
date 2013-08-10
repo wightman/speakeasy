@@ -7,7 +7,7 @@ import settings
 settings.r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 from bottle_session import Session
-from domain import Hashtag,User,Post,Timeline,Functions
+from domain import Hashtag,User,Post,Functions#,Timeline
 
 reserved_usernames = 'follow mentions home signup login logout post guest'
 bottle.debug(True)
@@ -45,6 +45,19 @@ def user_is_logged():
   if logged_in_user():
     return True
   return False
+
+@bottle.route(":page/delete/:id")
+@authenticate
+def delete(user, page, id):
+  post = Post(int(id))
+  if post.user == user:
+    Post.delete(id)
+    bottle.redirect('/'+page)
+  else:
+    bottle.redirect('/'+page)
+
+
+
 
 @bottle.route('/')
 def index():

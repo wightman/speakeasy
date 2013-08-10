@@ -5,11 +5,11 @@ import settings
 
 r = settings.r
 
-class Timeline:
-  def page(self,page):
-    _from = (page-1)*10
-    _to = (page)*10
-    return [Post(post_id) for post_ids in r.list_range('timeline',_from,_to)]
+# class Timeline:
+#   def page(self,page):
+#     _from = (page-1)*10
+#     _to = (page)*10
+#     return [Post(post_id) for post_ids in r.list_range('timeline',_from,_to)]
 
 class Model(object):
   def __init__(self,id):
@@ -82,29 +82,34 @@ class User(Model):
       		r.set("user:id:%s:%s" % (self.id, k) , v)
 
   def posts(self,page=1):
-    _from, _to = (page-1)*10, page*10
-    posts = r.lrange("user:id:%s:posts" % self.id, _from, _to)
-    if posts:
-      return [Post(int(post_id)) for post_id in posts]
-    return []
+    return self.posts_helper("posts")
   
   def timeline(self,page=1):
-    _from, _to = (page-1)*10, page*10
-    timeline= r.lrange("user:id:%s:timeline" % self.id, _from, _to)
-    mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
-    if mentions and timeline:
-      timeline.extend(mentions)
-    if timeline:
-      return [Post(int(post_id)) for post_id in timeline]
-    return []
+    return self.posts_helper("timeline")
 
   def mentions(self,page=1):
-    _from, _to = (page-1)*10, page*10
-    mentions = r.lrange("user:id:%s:mentions" % self.id, _from, _to)
-    if mentions:
-      print "hi"
-      return [Post(int(post_id)) for post_id in mentions]
-    return []
+    return self.posts_helper("mentions")
+
+  def posts_helper(self, name,page=1):
+    list_length = r.llen("user:id:%s:%s" % (self.id, name))
+    index = (page-1)*100
+    counter = (page-1)*100
+    post_list = []
+    print index
+    print list_length
+    while index < list_length and counter < page*100:
+      print index
+      post_id = r.lindex("user:id:%s:%s" % (self.id, name), index)
+      post = Post(int(post_id))
+      try:
+        if post.is_active == 'True':
+          post_list.append(post)
+          counter += 1
+      except AttributeError:
+        post_list.append(post)
+        counter+=1
+      index += 1
+    return post_list
 
   def add_post(self,post):
     r.lpush("user:id:%s:posts" % self.id, post.id)
@@ -189,6 +194,7 @@ class Post(Model):
     post.content = content
     post.user_id = user.id
     #post.created_at = Time.now.to_s
+    post.is_active = True
     user.add_post(post)
     r.lpush("timeline", post_id)
     for follower in user.followers:
@@ -213,6 +219,11 @@ class Post(Model):
     if r.sismember('posts:id', int(id)):
       return Post(id)
     return None
+
+  @staticmethod
+  def delete(id):
+    if Post.find_by_id(id):
+      r.set("post:id:%s:is_active" % id, False)
   
   @property
   def user(self):
@@ -262,14 +273,20 @@ class Functions:
       if r.get("post:uid") == None:
         return []
       else:
-        mostrecentpid = int(r.get("post:uid"))
-        if mostrecentpid < 100:
-          post = Post(int(mostrecentpid))
-          print post.user.username
-          return [Post(int(post_id)) for post_id in xrange(mostrecentpid,0,-1)]
-        else:
-          return [Post(int(post_id)) for post_id in xrange(mostrecentpid,mostrecentpid-100,-1)]
-        return []
+        post_id = int(r.get("post:uid"))
+        counter = 0
+        post_list = []
+        while counter < 100 and post_id > 0:
+          post = Post(int(post_id))
+          try:
+            if post.is_active == 'True':
+              post_list.append(post)
+              counter += 1
+          except AttributeError:
+            post_list.append(post)
+            counter+=1
+          post_id -= 1
+        return post_list
   
 def main():
   pass
