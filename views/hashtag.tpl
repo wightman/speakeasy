@@ -15,7 +15,7 @@
 	<p/>
 	
 	%for post in hashtags:
-%include shared/post.tpl tweet=post
+%include shared/post.tpl tweet=post,username=username
 	%end
 	</div>
 

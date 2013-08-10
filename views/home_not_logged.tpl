@@ -9,7 +9,7 @@
 		<br/>
 	<div class="tweets">
 	%for tweet in recent:
-%include shared/post.tpl tweet=tweet
+%include shared/post.tpl tweet=tweet,username=username
 	%end
 	</div>
 </div>

@@ -12,7 +12,7 @@
 		<h3>@{{username}} Mentions</h3>
 		
 		%for tweet in mentions:
-			%include shared/post.tpl tweet=tweet
+			%include shared/post.tpl tweet=tweet,username=username
 		%end
 		</div>
 	

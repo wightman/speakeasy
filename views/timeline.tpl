@@ -12,7 +12,7 @@
 		<div class="tweets hero-unit span9">
 			%include shared/form.tpl tweet=last_tweet
 			%for tweet in timeline:
-				%include shared/post.tpl tweet=tweet
+				%include shared/post.tpl tweet=tweet,username=username
 			%end
 		</div>
 

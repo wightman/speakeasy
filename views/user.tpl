@@ -5,6 +5,11 @@
 %else:
 	%include shared/header.tpl header=page,logged=logged,username=viewer
 	%end
+
+<div class="visible-phone">
+		%include shared/side.tpl username=username,counts=counts
+</div>
+
 <div class="container-fluid">
 
 	<div class="row-fluid">
@@ -27,7 +32,10 @@
 
 	%if posts:
   	%for tweet in posts:
-		%include shared/post.tpl tweet=tweet
+		%if himself:
+			%include shared/post.tpl tweet=tweet,username=username
+		%else:
+			%include shared/post.tpl tweet=tweet,username=viewer
   	%end
    %else:
    <p>{{username}} hasn't posted any tweet yet</p>

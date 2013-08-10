@@ -8,7 +8,7 @@
 	<br/>
 		%if posts:
 			%for tweet in posts:
-				%include shared/post.tpl tweet=tweet
+				%include shared/post.tpl tweet=tweet,username=username
 			%end
   	
 	    %else:
