@@ -69,7 +69,7 @@ def index():
 @authenticate
 def home(user):
   bottle.TEMPLATES.clear()
-  counts = user.followees_count,user.followers_count,user.tweet_count
+  counts = user.followees_count,user.followers_count,user.post_count
   if len(user.posts()) >0:
     last_tweet = user.posts()[0]
   else:
@@ -80,14 +80,14 @@ def home(user):
 @bottle.route('/mentions')
 @authenticate
 def mentions(user):
-  counts = user.followees_count,user.followers_count,user.tweet_count
+  counts = user.followees_count,user.followers_count,user.post_count
   return bottle.template('mentions',mentions=user.mentions(),page='mentions',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
 @bottle.route('/recent')
 @authenticate
 def mentions(user):
-  counts = user.followees_count,user.followers_count,user.tweet_count
+  counts = user.followees_count,user.followers_count,user.post_count
   return bottle.template('recent',recent=Functions.recent(),page='timeline',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
 
@@ -95,7 +95,7 @@ def mentions(user):
 @userCheck
 def hashtags(user, ht):
   if user != None:
-    counts = user.followees_count,user.followers_count,user.tweet_count
+    counts = user.followees_count,user.followers_count,user.post_count
     return bottle.template('hashtag',title=ht, hashtags=Hashtag.page(ht, page=1),page='timeline',username=user.username,
                                       counts=counts,posts=user.posts()[:1],logged=True)
   else:
@@ -105,14 +105,14 @@ def hashtags(user, ht):
 @bottle.route('/followers')
 @authenticate
 def followers(user):
-  counts = user.followees_count,user.followers_count,user.tweet_count
+  counts = user.followees_count,user.followers_count,user.post_count
   return bottle.template('followers',followers=user.followers,page='followers',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)
   
 @bottle.route('/following')
 @authenticate
 def followers(user):
-  counts = user.followees_count,user.followers_count,user.tweet_count
+  counts = user.followees_count,user.followers_count,user.post_count
   return bottle.template('following',followers=user.followees,page='following',username=user.username,
                                     counts=counts,posts=user.posts()[:1],logged=True)  
 
@@ -120,7 +120,7 @@ def followers(user):
 @userCheck
 def users(user):
   if user != None:
-    counts = user.followees_count,user.followers_count,user.tweet_count
+    counts = user.followees_count,user.followers_count,user.post_count
     return bottle.template('users',users=Functions.getUsers(),page='timeline',username=user.username,
                                       counts=counts,posts=user.posts()[:1],logged=True)
   else:
@@ -131,7 +131,7 @@ def users(user):
 def user_page(auth, name):
   user = User.find_by_username(name)
   if user:
-    counts = user.followees_count,user.followers_count,user.tweet_count
+    counts = user.followees_count,user.followers_count,user.post_count
     if auth != None:
       is_following,is_logged = False,user_is_logged()
       logged_user = logged_in_user()

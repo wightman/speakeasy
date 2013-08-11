@@ -59,8 +59,8 @@ class User(Model):
     if not r.get("user:username:%s" % username):
       r.set("user:id:%s:username" % user_id, username)
       r.set("user:username:%s" % username, user_id)
-      r.set("user:id:%s:numposts" % user_id, 0)
-    
+      #r.set("user:id:%s:numposts" % user_id, 0)
+
       #fake salting obviously :)
       salt = settings.SALT
       r.set("user:id:%s:password" % user_id, salt+password)
@@ -153,7 +153,7 @@ class User(Model):
     return []
   
   @property
-  def tweet_count(self):
+  def post_count(self):
     post_count = r.get("user:id:%s:numposts" % self.id)
     if post_count:
       return post_count
