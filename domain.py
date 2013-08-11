@@ -59,7 +59,7 @@ class User(Model):
     if not r.get("user:username:%s" % username):
       r.set("user:id:%s:username" % user_id, username)
       r.set("user:username:%s" % username, user_id)
-      #r.set("user:id:%s:numposts" % user_id, 0)
+      r.set("user:id:%s:numposts" % user_id, 0)
 
       #fake salting obviously :)
       salt = settings.SALT
@@ -165,8 +165,11 @@ class User(Model):
     post_ids = r.lrange("user:id:%s:posts" % self.id, 0 ,-1)
     for post_id in post_ids:
       post = Post(int(post_id))
-      if post.is_active == 'True':
-        counter += 1
+      try:
+        if post.is_active == 'True':
+          counter += 1
+      except AttributeError:
+        counter+=1    
     r.set("user:id:%s:numposts" % self.id, counter)
     return counter
 
