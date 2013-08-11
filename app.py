@@ -46,12 +46,12 @@ def user_is_logged():
     return True
   return False
 
-@bottle.route(":page/delete/:id")
+@bottle.route("/:page/delete/:id")
 @authenticate
 def delete(user, page, id):
   post = Post(int(id))
   if post.user == user:
-    Post.delete(id)
+    user.delete(id)
     bottle.redirect('/'+page)
   else:
     bottle.redirect('/'+page)
