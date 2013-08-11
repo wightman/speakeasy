@@ -58,6 +58,7 @@ class User(Model):
     if not r.get("user:username:%s" % username):
       r.set("user:id:%s:username" % user_id, username)
       r.set("user:username:%s" % username, user_id)
+      r.set("user:id:%s:numposts" % user_id, 0)
     
       #fake salting obviously :)
       salt = settings.SALT
@@ -95,10 +96,7 @@ class User(Model):
     index = (page-1)*100
     counter = (page-1)*100
     post_list = []
-    print index
-    print list_length
     while index < list_length and counter < page*100:
-      print index
       post_id = r.lindex("user:id:%s:%s" % (self.id, name), index)
       post = Post(int(post_id))
       try:
@@ -115,6 +113,7 @@ class User(Model):
     r.lpush("user:id:%s:posts" % self.id, post.id)
     r.lpush("user:id:%s:timeline" % self.id, post.id)
     r.sadd('posts:id', post.id)
+    r.incr('user:id:%s:numposts' % self.id)
   
   def add_timeline_post(self,post):
     r.lpush("user:id:%s:timeline" % self.id, post.id)
@@ -154,8 +153,22 @@ class User(Model):
   
   @property
   def tweet_count(self):
-    return r.llen("user:id:%s:posts" % self.id) or 0
+    post_count = r.get("user:id:%s:numposts" % self.id)
+    if post_count:
+      return post_count
+    else:
+      return self.countposts()
   
+  def countposts(self):
+    counter = 0
+    post_ids = r.lrange("user:id:%s:posts" % self.id, 0 ,-1)
+    for post_id in post_ids:
+      post = Post(int(post_id))
+      if post.is_active == 'True':
+        counter += 1
+    r.set("user:id:%s:numposts" % self.id, counter)
+    return counter
+
   @property
   def followees_count(self):
     return r.scard("user:id:%s:followees" % self.id) or 0
@@ -185,6 +198,11 @@ class User(Model):
 
   def remove_follower(self,user):
     r.srem("user:id:%s:followers" % self.id, user.id)
+
+  def delete(self, id):
+    if Post.find_by_id(id):
+      r.set("post:id:%s:is_active" % id, False)
+      r.decr("user:id:%s:numposts" % self.id)
 
 class Post(Model):
   @staticmethod
@@ -219,11 +237,6 @@ class Post(Model):
     if r.sismember('posts:id', int(id)):
       return Post(id)
     return None
-
-  @staticmethod
-  def delete(id):
-    if Post.find_by_id(id):
-      r.set("post:id:%s:is_active" % id, False)
   
   @property
   def user(self):
