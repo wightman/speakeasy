@@ -1,4 +1,3 @@
-
 %#WORK IN PROGRESS!
 %#list of currents posts
 %include shared/header.tpl header=page,logged=logged,username=username
@@ -10,7 +9,7 @@
 
 	<div class="row-fluid">
 
-	<div class="hero-unit tweets span9">
+	<div style="overflow: auto; max-height: 675px" class="hero-unit tweets span9">
 	<h1>#{{title}}</h1>
 	<p/>
 	
