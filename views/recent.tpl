@@ -8,7 +8,7 @@
 
 	<div class="row-fluid">
 
-		<div class="tweets hero-unit span9">
+		<div style="overflow: auto; max-height: 675px" class="tweets hero-unit span9">
 		<h3>Recent Posts</h3>
 			%if posts:
 				%include shared/form.tpl tweet=posts[0]
