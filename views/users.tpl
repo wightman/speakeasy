@@ -10,7 +10,7 @@
 
 	<div class="row-fluid">
 
-			<div class="tweets hero-unit span9">
+			<div style="overflow: auto; max-height: 675px" class="tweets hero-unit span9">
 				<h1>Users</h1>
 				<br></br>
 				%for u in users:
