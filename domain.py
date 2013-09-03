@@ -2,6 +2,7 @@
 import redis
 import re
 import settings
+import datetime
 
 r = settings.r
 
@@ -188,7 +189,7 @@ class Post(Model):
     post = Post(post_id)
     post.content = content
     post.user_id = user.id
-    #post.created_at = Time.now.to_s
+    post.created_at = str(datetime.datetime.now())
     user.add_post(post)
     r.lpush("timeline", post_id)
     for follower in user.followers:
@@ -217,6 +218,10 @@ class Post(Model):
   @property
   def user(self):
     return User.find_by_id(r.get("post:id:%s:user_id" % self.id))
+
+  @property
+  def created_at(self):
+    return r.get("post:id:%s:created_at" % self.id) or ""
 
 class Hashtag:
 

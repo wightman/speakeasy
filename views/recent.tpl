@@ -18,7 +18,7 @@
 		
 		
 		%for tweet in recent:
-			<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{tweet.user.username}}/statuses/{{tweet.id}}">permalink</a></span></p>
+			%include shared/post.tpl tweet=tweet
 		%end
 		</div>
 

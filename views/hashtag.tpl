@@ -15,7 +15,7 @@
 	<p/>
 	
 	%for post in hashtags:
-<p><img src="/static/avatar.png" /> <strong><a href="/{{post.user.username}}">{{post.user.username}}</a></strong> {{post.content}}<span><a href="/{{post.user.username}}/statuses/{{post.id}}">permalink</a></span></p>
+%include shared/post.tpl tweet=post
 	%end
 	</div>
 

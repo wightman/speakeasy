@@ -8,7 +8,7 @@
 	<br/>
 		%if posts:
 			%for tweet in posts:
-				<p><img src="/static/avatar.png" /> <strong><a href="/{{tweet.user.username}}">{{tweet.user.username}}</a></strong> {{tweet.content}}<span><a href="/{{username}}/statuses/{{tweet.id}}">permalink</a></span></p>
+				%include shared/post.tpl tweet=tweet
 			%end
   	
 	    %else:
