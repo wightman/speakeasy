@@ -10,7 +10,7 @@
 		
 	
 	%for post in hashtags:
-		%include shared/post.tpl tweet=post,username=username
+		%include shared/post.tpl tweet=post,username=None
 	%end
 	</div>
 	</div>
