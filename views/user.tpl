@@ -36,6 +36,7 @@
 			%include shared/post.tpl tweet=tweet,username=username
 		%else:
 			%include shared/post.tpl tweet=tweet,username=viewer
+		%end
   	%end
    %else:
    <p>{{username}} hasn't posted any tweet yet</p>
