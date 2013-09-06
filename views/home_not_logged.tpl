@@ -3,7 +3,7 @@
 
 <div class="container-fluid">
 
-<div class="hero-unit tweets span9">
+<div class="hero-unit tweets">
 	<h1>Welcome!<h1>
 		<h3>Create an account and start posting!</h3>
 		<br/>

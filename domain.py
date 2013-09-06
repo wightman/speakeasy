@@ -236,6 +236,15 @@ class Post(Model):
         Hashtag.addNewTag(hashtag[1:])
         Hashtag.addToTag(hashtag[1:], post_id)
 
+  def get_timestamp(self):
+    if self.created_at:
+      print self.created_at
+      date = datetime.datetime.strptime(self.created_at, "%Y-%m-%d %X.%f")
+      timestamp = date.strftime("%H:%M %m/%d/%Y")
+      return timestamp
+    else:
+      return ""
+
   @staticmethod
   def find_by_id(id):
     if r.sismember('posts:id', int(id)):
