@@ -39,7 +39,7 @@
 		%end
   	%end
    %else:
-   <p>{{username}} hasn't posted any tweet yet</p>
+   <p>{{username}} hasn't made any posts yet!</p>
   %end
 	</div>
 
