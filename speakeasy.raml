@@ -1,43 +1,129 @@
-'/:page/delete/:id'
+/{page}/delete/{id}:
+  get:
+    description:
+    reponses:
+      200:
 
-'/'
+/:
+  get:
+    description:
+    reponses:
+      200:
 
-'/home'
+/home:
+  get:
+    description:
+    reponses:
+      200:
 
-'/mentions'
+/mentions:
+  get:
+    description:
+    reponses:
+      200:
 
-'/recent'
+/recent:
+  get:
+    description:
+    reponses:
+      200:
 
-'/hashtag/:ht'
+/hashtag/{ht}:
+  get:
+    description:
+    reponses:
+      200:
 
-'/followers'
+/followers:
+  get:
+    description:
+    reponses:
+      200:
 
-'/following'
+/following:
+  get:
+    description:
+    reponses:
+      200:
 
-'/users'
+/users:
+  get:
+    description:
+    reponses:
+      200:
 
-'/:name'
+/{name}:
+  get:
+    description:
+    reponses:
+      200:
 
-'/:name/statuses/:id'
+/{name}/statuses/{id}:
+  get:
+    description:
+    reponses:
+      200:
 
-'/post',method='POST'
+/post:
+  post:
+    description:
+    reponses:
+      201:
 
-'/follow/:name',method='POST')
+/follow/{name}:
+  post:
+    description:
+    reponses:
+      201:
 
-'/unfollow/:name',method='POST'
+/unfollow/{name}:
+  post:
+    description:
+    reponses:
+      201:
 
-'/edit/:name', method='GET'
+/edit/{name}:
+  get:
+    description:
+    reponses:
+      200:
 
-'/edit', method="POST"
+/edit:
+  post:
+    description:
+    reponses:
+      201:
 
-'/signup'
+/signup:
+  get:
+    description:
+    reponses:
+      200:
 
-'/login'
+/login:
+  get:
+    description:
+    reponses:
+      200:
+  post:
+    description:
+    reponses:
+      201:
 
-'/login', method='POST'
+/logout:
+  get:
+    description:
+    reponses:
+      200:
 
-'/logout'
+/signup:
+  post:
+    description:
+    reponses:
+      201:
 
-'/signup', method='POST'
-
-'/static/:filename'
+/static/{filename}:
+  get:
+    description:
+    reponses:
+      200:
